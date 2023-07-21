@@ -44,6 +44,7 @@ program
     `Path and content string that can be used in replacing folders, files and their content. Make sure it doesn't include any special characters.`
   )
   .option('--skipGitStatusCheck', 'Skip git repo status check')
+  .option('--stageToGit', 'Decide whether to stage changes or not', false)
   .action(async newName => {
     validateCreation();
     validateGitRepo();
@@ -60,6 +61,7 @@ program
     const newBundleID = options.bundleID;
     const newIosBundleID = options.iosBundleID;
     const newAndroidBundleID = options.androidBundleID;
+    const stageToGit = options.stageToGit;
 
     if (pathContentStr) {
       validateNewPathContentStr(pathContentStr);
@@ -130,8 +132,9 @@ program
 
     cleanBuilds();
     showSuccessMessages(newName);
-    gitStageChanges();
-    checkPackageUpdate();
+    gitStageChanges(stageToGit);
+    // Temporarily disable update checks.
+    // checkPackageUpdate(); 
   });
 
 // If no arguments are passed, show help
